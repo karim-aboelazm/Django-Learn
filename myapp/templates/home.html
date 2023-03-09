@@ -1,0 +1,11 @@
+
+{% for post in posts  %}
+
+<h1>( {{forloop.counter}} ) {{post.title}}</h1>
+<p><a href="{% url 'myapp:post_edit' post.id %}">Edit Post</a></p>
+<p><a href="{% url 'myapp:post_delete' post.id %}">delete Post</a></p>
+<p><a href="{% url 'myapp:post' post.id %}">READ MORE</a></p>
+<hr>   
+{% endfor %}
+<h2><a href="{% url 'myapp:post_add' %}">+ ADD NEW POST</a></h2>
+    
