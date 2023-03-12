@@ -1,5 +1,29 @@
-<h1>{{post.title}}</h1>
+<h1>{{object.title}}</h1>
 <hr>
-<p>{{post.content}}</p>
+<p>{{object.content}}</p>
 <hr>
 <p><a href= "{% url 'myapp:home'%}">Go Back</a></p>
+
+<form method="post">
+    {% csrf_token %}
+    {{form}}
+    <button type="submit" id="myBtn" style="display:none;">Comment</button>
+</form>
+
+{% if allcomment.comments_set.all %}
+    {% for comnt in allcomment.comments_set.all %}
+        <p>{{comnt.comment}}</p>
+    {% endfor %}
+{% else %}
+<p>There is no comment yet !</p>
+{% endif %}
+
+<script>
+    var input = document.getElementById("id_comment");
+    input.addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("myBtn").click();
+      }
+    });
+</script>

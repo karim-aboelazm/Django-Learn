@@ -2,10 +2,20 @@
 {% for post in posts  %}
 
 <h1>( {{forloop.counter}} ) {{post.title}}</h1>
+<p>Posted at : {{post.created_at|timesince}} ago</p>
 <p><a href="{% url 'myapp:post_edit' post.id %}">Edit Post</a></p>
 <p><a href="{% url 'myapp:post_delete' post.id %}">delete Post</a></p>
-<p><a href="{% url 'myapp:post' post.id %}">READ MORE</a></p>
-<hr>   
+<p><a href="{% url 'myapp:post_details' post.id %}">READ MORE</a></p>
+
+<hr> 
+<h3>Comment For this post</h3>
+
+{% for comment in post.comments_set.all %}
+    <hr>
+    <p>{{comment.comment}}</p>
+    <hr>
+{% endfor %}
+
 {% endfor %}
 <h2><a href="{% url 'myapp:post_add' %}">+ ADD NEW POST</a></h2>
     

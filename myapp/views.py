@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView,ListView,DetailView,CreateView,UpdateView,DeleteView
-from myapp.models import Posts
+from myapp.models import Posts,Comments
+from .forms import *
 
 class HomePageView(TemplateView):
     template_name = "home.html"
@@ -19,8 +20,24 @@ class PostsPageView(ListView):
     
 class PostsDetailPageView(DetailView):
     model = Posts
-    context_object_name = 'post'
+    # context_object_name = 'post'
     template_name='details.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        current_post = self.get_object()
+        context["form"] = CommentForm(post = self.object)
+        context['allcomment'] = Posts.objects.get(pk=current_post.pk)
+        return context
+
+    def post(self, request,*args, **kwargs):
+        post = self.get_object()
+        form = CommentForm(request.POST,post=post)
+        if form.is_valid():
+            form.save()
+            return redirect(f"/post/{post.pk}/")
+        else:
+            return self.render_to_response({'form':form,'post':post})
     
 class PostsAddPageView(CreateView):
     model = Posts
@@ -34,8 +51,8 @@ class PostsUpdatePageView(UpdateView):
     fields = ["title","content"]
     success_url = "/"
     
-class PostsDeletePageView(DeleteView):
+class PostsDeletePageView(DeleteView,CreateView):
     model = Posts
+    from_class = CommentForm
     template_name='posts_confirm_delete.html'
     success_url = "/"
-    
