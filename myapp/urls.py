@@ -10,4 +10,7 @@ urlpatterns = [
     path('post/add/',PostsAddPageView.as_view(),name='post_add'),
     path('post/<int:pk>/edit',PostsUpdatePageView.as_view(),name='post_edit'),
     path('post/<int:pk>/delete',PostsDeletePageView.as_view(),name='post_delete'),
+    path('reply/<str:title>',CommentReplyView.as_view(),name='reply_comment'),
+    path('post-react/<int:pk>/',PostReactView.as_view(),name="post_react")
+
 ]

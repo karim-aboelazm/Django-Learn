@@ -1,7 +1,8 @@
 from django.shortcuts import render,redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import TemplateView,ListView,DetailView,CreateView,UpdateView,DeleteView
-from myapp.models import Posts,Comments
+from myapp.models import Posts,Comments,CommentsReply,PostReact
 from .forms import *
 
 class HomePageView(TemplateView):
@@ -18,6 +19,24 @@ class PostsPageView(ListView):
     context_object_name = 'posts'
     template_name='home.html'
     
+class PostReactView(View):
+    def get(self, request, *args, **kwargs):
+        post_id = self.kwargs['pk']
+        react = request.GET.get('react')
+        current_post = Posts.objects.get(id=post_id)
+        if react == 'LIKE':
+            PostReact.objects.create(post=current_post,post_react='LIKE')
+        elif react == 'LOVE':
+            PostReact.objects.create(post=current_post,post_react='LOVE')
+        elif react == 'SAD':
+            PostReact.objects.create(post=current_post,post_react='SAD')
+        elif react == 'CARE':
+            PostReact.objects.create(post=current_post,post_react='CARE')
+        else:
+            pass
+        return redirect("/")
+    
+
 class PostsDetailPageView(DetailView):
     model = Posts
     # context_object_name = 'post'
@@ -28,6 +47,22 @@ class PostsDetailPageView(DetailView):
         current_post = self.get_object()
         context["form"] = CommentForm(post = self.object)
         context['allcomment'] = Posts.objects.get(pk=current_post.pk)
+        
+        li,lo,sa,ca= 0,0,0,0
+        for react in self.object.postreact_set.all():
+            if react.post_react == 'LOVE':
+                lo+=1
+            elif react.post_react == 'LIKE':
+                li+=1
+            elif react.post_react == 'SAD':
+                sa+=1
+            else:
+                ca+=1
+        context['li'] = li
+        context['lo'] = lo
+        context['sa'] = sa
+        context['ca'] = ca
+        context['all_'] = lo+li+sa+ca
         return context
 
     def post(self, request,*args, **kwargs):
@@ -56,3 +91,19 @@ class PostsDeletePageView(DeleteView,CreateView):
     from_class = CommentForm
     template_name='posts_confirm_delete.html'
     success_url = "/"
+
+class CommentReplyView(CreateView):
+    model = CommentsReply
+    fields = ["reply"]
+    template_name='reply.html'
+    success_url = "/"
+    
+    def post(self, request,*args, **kwargs):
+        comment = Comments.objects.get(comment=self.kwargs['title'])
+        form = CommentReplyForm(request.POST)
+        if form.is_valid():
+            form.instance.comment = comment
+            form.save()
+            return redirect("/")
+        else:
+            return self.render_to_response({'form':form})

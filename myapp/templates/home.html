@@ -2,6 +2,10 @@
 {% for post in posts  %}
 
 <h1>( {{forloop.counter}} ) {{post.title}}</h1>
+<a href="{% url 'myapp:post_react' post.id %}?react=LIKE">LIKE</a>
+<a href="{% url 'myapp:post_react' post.id %}?react=LOVE">&#128150;</a>
+<a href="{% url 'myapp:post_react' post.id %}?react=SAD">SAD</a>
+<a href="{% url 'myapp:post_react' post.id %}?react=CARE">CARE</a>
 <p>Posted at : {{post.created_at|timesince}} ago</p>
 <p><a href="{% url 'myapp:post_edit' post.id %}">Edit Post</a></p>
 <p><a href="{% url 'myapp:post_delete' post.id %}">delete Post</a></p>

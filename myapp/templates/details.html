@@ -1,4 +1,6 @@
 <h1>{{object.title}}</h1>
+<p> ALL REACTS : {{all_}}</p>
+<p>LIKE : {{li}}, LOVE : {{lo}}, CARE : {{ca}} , SAD : {{sa}} </p>
 <hr>
 <p>{{object.content}}</p>
 <hr>
@@ -12,7 +14,15 @@
 
 {% if allcomment.comments_set.all %}
     {% for comnt in allcomment.comments_set.all %}
-        <p>{{comnt.comment}}</p>
+        <p><strong>{{comnt.comment}}</strong></p>
+        
+        <a href="{% url 'myapp:reply_comment' comnt.comment %}">Add Reply</a>
+        <br>
+        ------------------
+        {% for rep in comnt.commentsreply_set.all  %}
+          <p><small>{{rep.reply}}</small></p>
+        {% endfor %}
+          
     {% endfor %}
 {% else %}
 <p>There is no comment yet !</p>

@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 class Posts(models.Model):
     title = models.CharField(max_length=200)
@@ -39,3 +40,24 @@ class Comments(models.Model):
         verbose_name_plural = "Comments"
     def __str__(self):
         return f"comment number ({self.id}) for post number ({self.post.id})"
+
+class CommentsReply(models.Model):
+    comment = models.ForeignKey(Comments, on_delete=models.CASCADE)
+    reply = models.TextField()
+    
+    def get_absolute_url(self):
+        return reverse("post", kwargs={"pk": self.post.pk})
+    
+    class Meta:
+        verbose_name_plural = "Comments Reply"
+    def __str__(self):
+        return f"comment reply number ({self.id}) for comment with title ({self.comment.comment})"
+    
+class PostReact(models.Model):
+    REACTS = ((str(i),str(i)) for i in ['LIKE','LOVE','SAD','CARE'])
+    post = models.ForeignKey(Posts, on_delete=models.CASCADE)
+    post_react = models.CharField(max_length=10,choices=REACTS,default='LIKE')
+    class Meta:
+            verbose_name_plural = "Post React"
+    def __str__(self):
+        return f"Post number ({self.post.id}) has reacted with ({self.post_react})"

@@ -15,4 +15,8 @@ class CommentForm(forms.ModelForm):
         if comment:
             comment.save()
         return comment
-        
+
+class CommentReplyForm(forms.ModelForm):
+    class Meta:
+        model = CommentsReply
+        fields = ['reply']
