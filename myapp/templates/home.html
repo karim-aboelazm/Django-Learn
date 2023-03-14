@@ -1,25 +1,74 @@
+<!doctype html>
+{% load bootstrap5 %}
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://kit.fontawesome.com/cba01bb0d0.js" crossorigin="anonymous"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-{% for post in posts  %}
+  </head>
+  <body>
+    
+    <div class="container">
+        <div class="row  pt-5">
+            <div class="col-md-10 card p-5 mx-auto">
+                <h2 class="text-center pb-5 text-muted">
+                    All Posts
+                </h2>
+                <div class="row">
+                    <div class="col-md-4">
+                        <a href="{% url 'myapp:post_add' %}" class=""><i class="fas fa-plus-circle" style="font-size: 30px;"></i></a>
+                    </div>
+                </div>
+                {% for post in posts  %}
+                <div class="row my-1 p-2" style="border:1px solid #333; border-radius: 25px;">
+                   <div class="col-md-10">
+                        <h5 class="text-dark"><a href="{% url 'myapp:post_details' post.id %}" style="text-decoration: none;color:#333;">( {{forloop.counter}} ) {{post.title}}</a></h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="text-muted">Created at ({{post.created_at|timesince}} ago)</p>
+                            </div>
+                            <div class="col-md-3">
+                                <p class="text-muted">All Comments ( {{post.comments_set.all.count}} )</p>
+                                
+                            </div>
+                            <div class="col-md-3">
+                                
+                                <p class="text-muted">All Reacts ( {{post.postreact_set.all.count}} )</p>
+                            </div>
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-6"><a href="{% url 'myapp:post_edit' post.id %}"><i class="fa fa-edit text-dark" aria-hidden="true"></i></a></div>
+                                    <div class="col-md-6"><a href="{% url 'myapp:post_delete' post.id %}"><i class="fa fa-trash text-danger" aria-hidden="true"></i></a></div>
+                                </div>
+                            </div>
+                        </div>
+                   </div>
+                   <div class="col-md-2">
+                        <div class="row">
+                            <div class="col-md-3"><a href="{% url 'myapp:post_react' post.id %}?react=LIKE"><i class="fas fa-thumbs-up"></i></a></div>
+                            <div class="col-md-3"><a href="{% url 'myapp:post_react' post.id %}?react=LOVE"><i class="fas fa-heart text-danger"></i></a></div>
+                            <div class="col-md-3"><a href="{% url 'myapp:post_react' post.id %}?react=SAD"> &#128557;</a></div>
+                            <div class="col-md-3"><a href="{% url 'myapp:post_react' post.id %}?react=CARE">&#128525;</a></div>
+                        </div>
+                   </div>
+                </div>
+               {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!-- Optional JavaScript; choose one of the two! -->
 
-<h1>( {{forloop.counter}} ) {{post.title}}</h1>
-<a href="{% url 'myapp:post_react' post.id %}?react=LIKE">LIKE</a>
-<a href="{% url 'myapp:post_react' post.id %}?react=LOVE">&#128150;</a>
-<a href="{% url 'myapp:post_react' post.id %}?react=SAD">SAD</a>
-<a href="{% url 'myapp:post_react' post.id %}?react=CARE">CARE</a>
-<p>Posted at : {{post.created_at|timesince}} ago</p>
-<p><a href="{% url 'myapp:post_edit' post.id %}">Edit Post</a></p>
-<p><a href="{% url 'myapp:post_delete' post.id %}">delete Post</a></p>
-<p><a href="{% url 'myapp:post_details' post.id %}">READ MORE</a></p>
-
-<hr> 
-<h3>Comment For this post</h3>
-
-{% for comment in post.comments_set.all %}
-    <hr>
-    <p>{{comment.comment}}</p>
-    <hr>
-{% endfor %}
-
-{% endfor %}
-<h2><a href="{% url 'myapp:post_add' %}">+ ADD NEW POST</a></h2>
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+  </body>
+</html>
     

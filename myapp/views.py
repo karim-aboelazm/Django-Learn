@@ -3,7 +3,22 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView,ListView,DetailView,CreateView,UpdateView,DeleteView
 from myapp.models import Posts,Comments,CommentsReply,PostReact
+from django.contrib.auth.views import LoginView,LogoutView,PasswordChangeView
 from .forms import *
+
+class LoginPageView(LoginView):
+    template_name = "login.html"
+    success_url = "/home/"
+
+class ProfilePageView(TemplateView):
+    template_name = 'profile.html'
+
+class LogoutPageView(LogoutView):
+    next_page = '/login/'
+    
+class PasswordChangePageView(PasswordChangeView):
+    template_name = "password_change.html"
+    success_url = "/login/"
 
 class HomePageView(TemplateView):
     template_name = "home.html"
@@ -34,9 +49,8 @@ class PostReactView(View):
             PostReact.objects.create(post=current_post,post_react='CARE')
         else:
             pass
-        return redirect("/")
+        return redirect("/home/")
     
-
 class PostsDetailPageView(DetailView):
     model = Posts
     # context_object_name = 'post'
@@ -85,12 +99,16 @@ class PostsUpdatePageView(UpdateView):
     template_name='update.html'
     fields = ["title","content"]
     success_url = "/"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["post"] = Posts.objects.get(id=self.kwargs['pk']) 
+        return context
     
-class PostsDeletePageView(DeleteView,CreateView):
+    
+class PostsDeletePageView(DeleteView):
     model = Posts
-    from_class = CommentForm
     template_name='posts_confirm_delete.html'
-    success_url = "/"
+    success_url = "/home/"
 
 class CommentReplyView(CreateView):
     model = CommentsReply

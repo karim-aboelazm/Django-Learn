@@ -78,6 +78,8 @@ Django Class-based views
     path('url/<int:pk>',CLASS_NAME.as_view(),name="name")
     ```
 
+7) FormView
+8) View
 ---------------------------------------------------------
 ---------------------------------------------------------
 
@@ -200,3 +202,20 @@ class Customers(models.Model):
 go to admin.py and 
 admin.site.register(table_name)
 
+---------------------------------------------------------
+---------------------------------------------------------
+
+User Authentecation CBV
+----------------------
+from django.contrib.auth.views import LoginView , LogoutView, PasswordChangeView , ...
+-> Regesteration
+
+-> Login (LoginView)
+
+-> Logout(LogoutView)
+
+-> change password(PasswordChangeView)
+
+-> reset password (PasswordResetView)
+
+-> confirm reset password(PasswordResetConfirmView)
